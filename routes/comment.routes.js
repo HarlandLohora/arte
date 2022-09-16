@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const mongoose = require("mongoose");
 const User = require("../models/User.model");
-const Comments = require("../models/Comments.model");
+const Comments = require("../models/comments.model");
 const Post = require("../models/Posts.model");
 
 router.post("/post/:postId/comment", (req, res, next) => {
