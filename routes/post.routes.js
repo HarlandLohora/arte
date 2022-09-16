@@ -2,7 +2,7 @@ const router = require("express").Router();
 const mongoose = require("mongoose");
 const Post = require("../models/Posts.model");
 const User = require("../models/User.model");
-const Comments = require("../models/Comments.model");
+const Comments = require("../models/comments.model");
 
 //post-list
 router.get("/post", (req, res) => {
