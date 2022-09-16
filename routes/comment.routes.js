@@ -4,37 +4,40 @@ const User = require("../models/User.model");
 const Comments = require("../models/Comments.model");
 const Post = require("../models/Posts.model");
 
+router.post("/post/:postId/comment", (req, res, next) => {
+  const { postId } = req.params;
+  const { content } = req.body;
 
-router.post('/post/:postId/comment', (req, res, next) => {
-    const { postId } = req.params;
-    const { content } = req.body;
-   
-    let user;
-    console.log(req.session, content)
-   
-    Comments.create({content: content, date: new Date(), author: req.session.user._id})
-    .then((newComents)=>{
-        Post.findByIdAndUpdate(postId, {$push:{comments: newComents._id}})
-        .then(()=> {
-            res.redirect("/post/" + postId)
-        })
-        
-    }) 
-    .catch(err => console.log(err))
-    return
-   
-    User.findOne({ username: author })
-      .then(userDocFromDB => {
-        user = userDocFromDB;
-   
-        // 1. if commenter is not user yet, let's register him/her as a user
-       /* if (!userDocFromDB) {
+  let user;
+  console.log(req.session, content);
+
+  Comments.create({
+    content: content,
+    date: new Date(),
+    author: req.session.user._id,
+  })
+    .then((newComents) => {
+      Post.findByIdAndUpdate(postId, {
+        $push: { comments: newComents._id },
+      }).then(() => {
+        res.redirect("/post/" + postId);
+      });
+    })
+    .catch((err) => console.log(err));
+  return;
+
+  User.findOne({ username: author })
+    .then((userDocFromDB) => {
+      user = userDocFromDB;
+
+      // 1. if commenter is not user yet, let's register him/her as a user
+      /* if (!userDocFromDB) {
           return User.create({ username: author });
         }*/
-      })
-      .then(newUser => {
-        // prettier-ignore
-        Post.findById(postId)
+    })
+    .then((newUser) => {
+      // prettier-ignore
+      Post.findById(postId)
         .then(dbPost => {
           let newComment;
    
@@ -59,11 +62,11 @@ router.post('/post/:postId/comment', (req, res, next) => {
               .then(updatedPost => res.redirect(`/post/${updatedPost._id}`))
           });
         });
-      })
-      .catch(err => {
-        console.log(`Error while creating the comment: ${err}`);
-        next(err);
-      });
-  });
-   
-  module.exports = router;
+    })
+    .catch((err) => {
+      console.log(`Error while creating the comment: ${err}`);
+      next(err);
+    });
+});
+
+module.exports = router;
